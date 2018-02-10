@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace GRTK
 {
+	public enum PolygonType { Discard, LevelExterior, LevelHoles }
     // Class to represent a closed polygon. This is serializable so we can
     // store it in a scriptable object (LevelGeometry) to save our
     // results from compiling geometry
@@ -13,6 +14,9 @@ namespace GRTK
 
         // the raw data that represents these polygons.
         public List<Vector2> verticies = new List<Vector2>();
+
+		// The type of polygon for the purpose of GeoJson
+		public PolygonType type = PolygonType.Discard;
 
         public void SetVerticies(List<Vector2> verticies)
         {
@@ -46,7 +50,29 @@ namespace GRTK
             }
 
             return vec3.ToArray();
-        }
+		}
+
+		// Returns a JSON string encoding the polygon with exterior boundary and interiors as holes under the GeoJSON format.
+		public static string ToJson(Polygon exterior, List<Polygon> interiors) {
+			List<List<Vector2>> coordinates = new List<List<Vector2>> ();
+			coordinates.Add (exterior.verticies);
+			foreach(Polygon p in interiors) 
+				coordinates.Add(p.verticies);
+			
+			string json = "{\"type\": \"Polygon\", \"coordinates\": [";
+			foreach (List<Vector2> polyline in coordinates) {
+				json += "[";
+				foreach (Vector2 v in polyline) {
+					json += string.Format ("[{0}, {1}]", v.x, v.y);
+					if (v != polyline [polyline.Count - 1])
+						json += ",";
+				}
+				json += "]";
+				if (polyline != coordinates [coordinates.Count - 1])
+					json += ",";
+			}
+			return json + "]}";
+		}
 
         #region Editor
         private void OnDrawGizmosSelected()
