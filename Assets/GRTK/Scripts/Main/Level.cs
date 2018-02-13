@@ -55,7 +55,7 @@ namespace GRTK
             // Now we will delete any edges who's midpoint is interior to another boundary
             // These edges can remain when there's an exterior-exterior edge crossing polygons
             // Consider a T shape made of 2 boundaries. Right at the cross section
-            foreach (UnorderedPair<BoundaryGraphNode, BoundaryGraphNode> edge in graph.getEdgesAsUniquePairs())
+            foreach (UnorderedPair<BoundaryGraphNode> edge in graph.getEdgesAsUniquePairs())
             {
                 // Find the midpoint
                 Vector3 midpoint = new Vector3((edge.item1.position.x + edge.item2.position.x) / 2, (edge.item1.position.y + edge.item2.position.y) / 2, 0);
