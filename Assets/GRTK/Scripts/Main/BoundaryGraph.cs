@@ -72,8 +72,8 @@ namespace GRTK
 					Line2D line2 = new Line2D(edge2.item1.position, edge2.item2.position);
 
 					// test for intersection
-					Vector2 intersection;
-					if (line1.Intersect(line2, out intersection))
+					Vector2 intersection = new Vector2();
+					if (line1.Intersect(line2, ref intersection))
 					{
 						// Create intersection node and split edges
 						BoundaryGraphNode intersectionNode = new BoundaryGraphNode(intersection);
